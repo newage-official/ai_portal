@@ -40,7 +40,6 @@
       padding: 1.5rem;
     }
 
-    /* subtle dot grid background */
     body::before {
       content: '';
       position: fixed;
@@ -79,29 +78,12 @@
       text-align: center;
     }
 
-    .logo-box {
-      width: 52px;
+    .logo-area img {
       height: 52px;
-      background: var(--accent);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: auto;
+      object-fit: contain;
       margin-bottom: 1rem;
     }
-
-    .logo-box svg {
-      width: 26px;
-      height: 26px;
-      stroke: #fff;
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* Replace .logo-box with <img> tag when you have a real logo:
-       <img src="your-logo.png" alt="Company Logo" style="height:52px;" /> */
 
     .logo-area h1 {
       font-size: 1.125rem;
@@ -297,29 +279,28 @@
       background: var(--border);
     }
   </style>
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "x13hxsbvnw");
-    </script>
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x13hxsbvnw");
+  </script>
 </head>
 <body>
 
 <div class="card" role="main">
 
   <!-- LOGO AREA -->
-  <!-- TO ADD YOUR LOGO: replace the .logo-box div below with:
-       <img src="your-logo.png" alt="Your Company" style="height:52px; margin-bottom:1rem;" /> -->
   <div class="logo-area">
-  <img src="https://raw.githubusercontent.com/newage-official/ai_portal/main/static/logo.png"
-       alt="Company Logo"
-       style="height:52px; margin-bottom:1rem;" />
-  <h1>Welcome back</h1>
-  <p>Sign in to access the internal chatbot</p>
-</div>
+    <img
+      src="https://raw.githubusercontent.com/newage-official/ai_portal/main/static/logo.png"
+      alt="New Age Logo"
+    />
+    <h1>Welcome back</h1>
+    <p>Sign in to access the internal chatbot</p>
+  </div>
 
   <!-- ERROR / SUCCESS BANNERS -->
   <div class="alert error" id="errorAlert" role="alert" aria-live="polite">
@@ -353,9 +334,7 @@
       </svg>
       <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" style="padding-right: 40px;" />
       <button class="pw-toggle" id="pwToggle" type="button" aria-label="Show password" onclick="togglePw()">
-        <!-- Eye icon (shown when password hidden) -->
         <svg id="eyeShow" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        <!-- Eye-off icon (shown when password visible) -->
         <svg id="eyeHide" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
       </button>
     </div>
@@ -385,36 +364,6 @@
 </div>
 
 <script>
-  /* ============================================================
-     AUTH PLACEHOLDER
-     ─────────────────────────────────────────────────────────────
-     Right now this function simulates an API call with a 1.5s
-     delay and always returns "invalid credentials" (so no one
-     can log in for real yet).
-
-     WHEN YOUR BACKEND IS READY — replace the fakeApiCall()
-     function with a real fetch() to your API endpoint, e.g.:
-
-       const res = await fetch('https://your-api.com/auth/login', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ email, password })
-       });
-       const data = await res.json();
-       if (!res.ok) throw new Error(data.message || 'Login failed');
-       return data; // { token, user, ... }
-
-     The rest of the UI logic stays the same.
-  ============================================================ */
-
-  /* ══════════════════════════════════════════════════
-     TEST CREDENTIALS (remove when backend is ready)
-     ══════════════════════════════════════════════════
-     admin@company.com      →  Admin@1234
-     developer@company.com  →  Dev@5678
-     manager@company.com    →  Manager@91011
-     ══════════════════════════════════════════════════ */
-  // ── IMPORTANT: Paste your Apps Script URL here after deploying ──
   async function fakeApiCall(email, password) {
     const res  = await fetch('/api/login', {
       method: 'POST',
@@ -429,20 +378,18 @@
     }
   }
 
-  /* ── Toggle password visibility ── */
   function togglePw() {
-    const input  = document.getElementById('password');
-    const show   = document.getElementById('eyeShow');
-    const hide   = document.getElementById('eyeHide');
-    const btn    = document.getElementById('pwToggle');
+    const input    = document.getElementById('password');
+    const show     = document.getElementById('eyeShow');
+    const hide     = document.getElementById('eyeHide');
+    const btn      = document.getElementById('pwToggle');
     const isHidden = input.type === 'password';
-    input.type   = isHidden ? 'text' : 'password';
+    input.type = isHidden ? 'text' : 'password';
     show.style.display = isHidden ? 'none' : '';
     hide.style.display = isHidden ? '' : 'none';
     btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
   }
 
-  /* ── Main login handler ── */
   async function handleLogin() {
     const email    = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -455,13 +402,11 @@
     const emailEl  = document.getElementById('email');
     const passEl   = document.getElementById('password');
 
-    // Reset state
     errAlert.classList.remove('show');
     sucAlert.classList.remove('show');
     emailEl.classList.remove('error-field');
     passEl.classList.remove('error-field');
 
-    // Client-side validation
     if (!email) {
       errText.textContent = 'Please enter your email address.';
       errAlert.classList.add('show');
@@ -491,39 +436,27 @@
       return;
     }
 
-    // Loading state
-    btn.disabled    = true;
+    btn.disabled = true;
     btnText.textContent = 'Signing in...';
     spinner.style.display = 'block';
 
     try {
       const data = await fakeApiCall(email, password);
 
-      // ── SUCCESS ──
-      // Save token/session if needed:
-      // if (document.getElementById('rememberMe').checked) {
-      //   localStorage.setItem('auth_token', data.token);
-      // } else {
-      //   sessionStorage.setItem('auth_token', data.token);
-      // }
-
       sucAlert.classList.add('show');
       btnText.textContent = 'Redirecting...';
 
-      // Redirect after 1.5s — change URL to your dashboard
       setTimeout(() => {
-        // Save logged in user info for chat page
-sessionStorage.setItem('loggedInUser', JSON.stringify({
-  name: data.name,
-  email: email,
-  role: data.role,
-  initials: data.name.charAt(0).toUpperCase()
-}));
-window.location.href = '/chat';
+        sessionStorage.setItem('loggedInUser', JSON.stringify({
+          name:     data.name,
+          email:    email,
+          role:     data.role,
+          initials: data.name.charAt(0).toUpperCase()
+        }));
+        window.location.href = '/chat';
       }, 1500);
 
     } catch (err) {
-      // ── ERROR ──
       errText.textContent = err.message || 'Something went wrong. Please try again.';
       errAlert.classList.add('show');
       btn.disabled = false;
@@ -532,12 +465,10 @@ window.location.href = '/chat';
     }
   }
 
-  /* ── Allow Enter key to submit ── */
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handleLogin();
   });
 
-  /* ── Forgot password ── */
   document.getElementById('forgotLink').addEventListener('click', (e) => {
     e.preventDefault();
     window.location.href = '/forgot-password';
