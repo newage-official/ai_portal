@@ -5,124 +5,327 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Request Access — New Age AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #F5F4F0; --surface: #FFFFFF; --border: #E2E0DA;
-      --border-strong: #C8C6BF; --text: #1A1916; --muted: #6B6A65;
-      --hint: #9E9C97; --accent: #1A1916; --accent-fg: #FFFFFF;
-      --danger-bg: #FEF2F2; --danger-bd: #FECACA; --danger-tx: #B91C1C;
-      --success-bg: #F0FDF4; --success-bd: #BBF7D0; --success-tx: #15803D;
-      --radius: 10px; --radius-sm: 6px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      --bg: #F5F4F0;
+      --surface: #FFFFFF;
+      --border: #E2E0DA;
+      --border-strong: #C8C6BF;
+      --text: #1A1916;
+      --muted: #6B6A65;
+      --hint: #9E9C97;
+      --accent: #1A1916;
+      --accent-fg: #FFFFFF;
+      --danger-bg: #FEF2F2;
+      --danger-bd: #FECACA;
+      --danger-tx: #B91C1C;
+      --success-bg: #F0FDF4;
+      --success-bd: #BBF7D0;
+      --success-tx: #15803D;
+      --radius: 12px;
+      --radius-sm: 7px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 24px rgba(0,0,0,0.07);
     }
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 1.5rem;
     }
+
     body::before {
-      content: ''; position: fixed; inset: 0;
+      content: '';
+      position: fixed;
+      inset: 0;
       background-image: radial-gradient(circle, #C8C6BF 1px, transparent 1px);
-      background-size: 24px 24px; opacity: 0.45;
-      pointer-events: none; z-index: 0;
+      background-size: 24px 24px;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
     }
+
     .card {
-      position: relative; z-index: 1;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 2.5rem 2rem; width: 100%; max-width: 420px;
-      animation: slideUp 0.35s ease both;
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
+
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── Logo area ── */
     .logo-area {
-      display: flex; flex-direction: column;
-      align-items: center; margin-bottom: 2rem; text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      text-align: center;
+      gap: 0.5rem;
     }
-    .logo-box {
-      width: 52px; height: 52px; background: var(--accent);
-      border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
+
+    .logo-img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      margin-bottom: 0.25rem;
     }
-    .logo-img{
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 1rem;
-}
-    .logo-box svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .logo-area h1 { font-size: 1.125rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-    .logo-area p  { font-size: 0.8125rem; color: var(--muted); margin-top: 3px; }
+
+    .logo-area h1 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.015em;
+    }
+
+    .logo-area p {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    /* ── Alerts ── */
     .alert {
-      display: none; align-items: flex-start; gap: 9px;
-      padding: 10px 13px; border-radius: var(--radius-sm);
-      font-size: 0.8125rem; line-height: 1.5;
-      margin-bottom: 1.25rem; border: 1px solid;
+      display: none;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      border: 1px solid;
     }
     .alert.show { display: flex; }
     .alert.error   { background: var(--danger-bg);  border-color: var(--danger-bd);  color: var(--danger-tx); }
     .alert.success { background: var(--success-bg); border-color: var(--success-bd); color: var(--success-tx); }
-    .alert svg { flex-shrink: 0; width: 15px; height: 15px; margin-top: 1px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .alert svg {
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+      margin-top: 1px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Form ── */
     .form-group { margin-bottom: 1.1rem; }
-    label { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--text); margin-bottom: 5px; }
-    .input-wrap { position: relative; display: flex; align-items: center; }
-    .input-icon { position: absolute; left: 11px; pointer-events: none; width: 16px; height: 16px; stroke: var(--hint); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    input[type="email"], input[type="password"], input[type="text"], select {
-      width: 100%; height: 40px; padding: 0 12px 0 36px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
-      color: var(--text); background: var(--surface);
-      border: 1px solid var(--border); border-radius: var(--radius-sm);
-      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 5px;
     }
-    select { padding-left: 36px; cursor: pointer; appearance: none; }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 11px;
+      pointer-events: none;
+      width: 15px;
+      height: 15px;
+      stroke: var(--hint);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.15s;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    select {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px 0 34px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+    }
+
     input::placeholder { color: var(--hint); }
-    input:focus, select:focus { border-color: var(--border-strong); box-shadow: 0 0 0 3px rgba(26,25,22,0.07); }
-    input.error-field, select.error-field { border-color: var(--danger-bd); }
-    .pw-toggle { position: absolute; right: 10px; background: none; border: none; cursor: pointer; padding: 4px; color: var(--hint); display: flex; align-items: center; transition: color 0.15s; }
-    .pw-toggle:hover { color: var(--muted); }
-    .pw-toggle svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .btn-submit {
-      width: 100%; height: 42px;
-      background: var(--accent); color: var(--accent-fg);
-      border: none; border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif; font-size: 0.9375rem; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: opacity 0.15s; margin-top: 1.5rem;
+
+    input:focus,
+    select:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(26,25,22,0.07);
     }
-    .btn-submit:hover:not(:disabled) { opacity: 0.88; }
-    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
-    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+
+    input:focus + .input-icon,
+    .input-wrap:focus-within .input-icon {
+      stroke: var(--muted);
+    }
+
+    input.error-field,
+    select.error-field {
+      border-color: var(--danger-bd);
+    }
+
+    /* select chevron */
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--hint);
+      pointer-events: none;
+    }
+
+    /* password toggle */
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--hint);
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .pw-toggle:hover { color: var(--muted); }
+    .pw-toggle svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Submit button ── */
+    .btn-submit {
+      width: 100%;
+      height: 42px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.15s, transform 0.1s;
+      margin-top: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+    .btn-submit:hover:not(:disabled) { opacity: 0.86; }
+    .btn-submit:active:not(:disabled) { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* spinner */
+    .spinner {
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      display: none;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .divider { text-align: center; font-size: 0.75rem; color: var(--hint); margin: 1.5rem 0 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-top: 1px solid var(--border); padding-top: 1rem; }
-    .footer-note { text-align: center; font-size: 0.8rem; color: var(--hint); line-height: 1.6; }
-    .footer-note a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
-    .footer-note a:hover { color: var(--text); }
+
+    /* ── Footer ── */
+    .divider {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--hint);
+      margin: 1.5rem 0 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--hint);
+      line-height: 1.6;
+    }
+
+    .footer-note a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .footer-note a:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
   </style>
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "x13hxsbvnw");
-    </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x13hxsbvnw");
+  </script>
 </head>
 <body>
+
 <div class="card">
 
   <div class="logo-area">
-    <img src="/static/logo.png" alt="New Age Logo" class="logo-img">
+    <img
+      src="https://raw.githubusercontent.com/newage-official/ai_portal/main/static/logo.png"
+      alt="New Age AI"
+      class="logo-img"
+    />
     <h1>Request Access</h1>
     <p>Submit your details for admin approval</p>
   </div>
 
+  <!-- Alerts -->
   <div class="alert error" id="errorAlert" role="alert">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span id="errorText">Something went wrong.</span>
@@ -133,25 +336,28 @@
     <span id="successText">Request submitted! Await admin approval before logging in.</span>
   </div>
 
+  <!-- Full Name -->
   <div class="form-group">
     <label for="name">Full Name</label>
     <div class="input-wrap">
       <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <input type="text" id="name" placeholder="Your full name" />
+      <input type="text" id="name" placeholder="Your full name" autocomplete="name" />
     </div>
   </div>
 
+  <!-- Work Email -->
   <div class="form-group">
     <label for="email">Work Email</label>
     <div class="input-wrap">
       <svg class="input-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      <input type="email" id="email" placeholder="you@newage4.com" />
+      <input type="email" id="email" placeholder="you@newage4.com" autocomplete="email" />
     </div>
   </div>
 
+  <!-- Team -->
   <div class="form-group">
     <label for="role">Team</label>
-    <div class="input-wrap">
+    <div class="input-wrap select-wrap">
       <svg class="input-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
       <select id="role">
         <option value="" disabled selected>Select your team</option>
@@ -159,7 +365,7 @@
         <option>New Age Guardian</option>
         <option>iOS Growth</option>
         <option>iOS Product Development</option>
-        <option>Internal Support & Operations</option>
+        <option>Internal Support &amp; Operations</option>
         <option>New Age Alpha</option>
         <option>New Age Nova</option>
         <option>New Age Business</option>
@@ -168,12 +374,13 @@
     </div>
   </div>
 
+  <!-- Password -->
   <div class="form-group">
     <label for="password">Set Password</label>
     <div class="input-wrap">
       <svg class="input-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <input type="password" id="password" placeholder="Min. 6 characters" style="padding-right:40px" />
-      <button class="pw-toggle" type="button" onclick="togglePw()">
+      <input type="password" id="password" placeholder="Min. 6 characters" style="padding-right:38px" autocomplete="new-password" />
+      <button class="pw-toggle" type="button" onclick="togglePw()" aria-label="Toggle password visibility">
         <svg id="eyeShow" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         <svg id="eyeHide" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
       </button>
@@ -191,9 +398,6 @@
 </div>
 
 <script>
-  // ── IMPORTANT: Paste your Apps Script URL here after deploying ──
-
-
   function togglePw() {
     const input = document.getElementById('password');
     const show  = document.getElementById('eyeShow');
@@ -216,6 +420,15 @@
     document.getElementById('errorAlert').classList.remove('show');
   }
 
+  function resetBtn() {
+    const btn     = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const spinner = document.getElementById('spinner');
+    btn.disabled = false;
+    btnText.textContent = 'Request Access';
+    spinner.style.display = 'none';
+  }
+
   async function handleSignup() {
     const name     = document.getElementById('name').value.trim();
     const email    = document.getElementById('email').value.trim();
@@ -232,13 +445,13 @@
     if (!name)     return showError('Please enter your full name.');
     if (!email)    return showError('Please enter your work email.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Please enter a valid email address.');
-    if (!role)     return showError('Please select your role.');
+    if (!role)     return showError('Please select your team.');
     if (!password) return showError('Please set a password.');
     if (password.length < 6) return showError('Password must be at least 6 characters.');
 
-    // Loading
+    // Loading state
     btn.disabled = true;
-    btnText.textContent = 'Submitting...';
+    btnText.textContent = 'Submitting…';
     spinner.style.display = 'block';
 
     try {
@@ -250,23 +463,22 @@
       const data = await res.json();
 
       if (data.success) {
-        showSuccess(data.message);
+        showSuccess(data.message || 'Request submitted! Await admin approval before logging in.');
         btnText.textContent = 'Request Sent ✓';
-      } else {
-        showError(data.message);
-        btn.disabled = false;
-        btnText.textContent = 'Request Access';
         spinner.style.display = 'none';
+      } else {
+        showError(data.message || 'Something went wrong. Please try again.');
+        resetBtn();
       }
-    } catch(err) {
+    } catch (err) {
       showError('Could not connect. Please try again.');
-      btn.disabled = false;
-      btnText.textContent = 'Request Access';
-      spinner.style.display = 'none';
+      resetBtn();
     }
   }
 
-  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSignup();
+  });
 </script>
 </body>
 </html>
