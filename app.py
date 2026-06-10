@@ -72,37 +72,36 @@ def is_whitelisted(email):
 
 
 def send_invite_email(to_email):
-    if not EMAIL_ADDRESS or not EMAIL_APP_PASSWORD:
+    resend_key = os.getenv('RESEND_API_KEY', '')
+    if not resend_key:
         return False
     try:
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
-
-        msg = MIMEMultipart()
-        msg['From']    = EMAIL_ADDRESS
-        msg['To']      = to_email
-        msg['Subject'] = "You're invited to the New Age Internal AI Portal"
-
-        body = f"""Hi!
-
-You've been invited to access the New Age Internal AI Portal.
-
-Sign up here: https://moncey10-ai-portal.hf.space/signup
-
-Use your email: {to_email}
-
-Once you sign up, you can login immediately.
-
-— New Age Team"""
-
-        msg.attach(MIMEText(body, 'plain'))
-        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=5)
-        server.starttls()
-        server.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
-        server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
-        server.quit()
-        return True
+        res = requests.post(
+            'https://api.resend.com/emails',
+            headers={
+                'Authorization': f'Bearer {resend_key}',
+                'Content-Type': 'application/json'
+            },
+            json={
+                'from': 'New Age Portal <onboarding@resend.dev>',
+                'to': [to_email],
+                'subject': "You're invited to the New Age Internal AI Portal",
+                'html': f'''
+                <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;">
+                  <h2 style="color:#1A1916;margin-bottom:8px;">You're Invited! 🎉</h2>
+                  <p style="color:#6B6A65;margin-bottom:24px;">You've been invited to access the <strong>New Age Internal AI Support Portal</strong>.</p>
+                  <a href="https://ai-portal-beta.vercel.app/signup" style="display:inline-block;background:#1A1916;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;margin-bottom:24px;">Sign Up Now →</a>
+                  <p style="color:#6B6A65;margin-bottom:8px;">Or copy this link:</p>
+                  <p style="color:#1A1916;margin-bottom:24px;">https://ai-portal-beta.vercel.app/signup</p>
+                  <p style="color:#9E9C97;font-size:0.875rem;">Use this email address to sign up: <strong>{to_email}</strong></p>
+                  <hr style="border:none;border-top:1px solid #E2E0DA;margin:24px 0;" />
+                  <p style="color:#9E9C97;font-size:0.75rem;">New Age Portal — Internal AI Support | newage4.com</p>
+                </div>
+                '''
+            },
+            timeout=15
+        )
+        return res.ok
     except Exception as e:
         print(f"Email error: {e}")
         return False
