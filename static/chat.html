@@ -55,27 +55,14 @@
     .navbar-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
-      border-radius: var(--radius-xs);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-mark svg {
-      width: 17px;
-      height: 17px;
-      stroke: #fff;
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .logo-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      display: block;
     }
 
     .brand-name {
@@ -192,25 +179,10 @@
       gap: 1rem;
     }
 
-    .welcome-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .welcome-icon svg {
-      width: 24px;
-      height: 24px;
-      stroke: var(--muted);
-      fill: none;
-      stroke-width: 1.6;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .welcome-logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
     }
 
     .welcome h2 {
@@ -323,7 +295,6 @@
       border-top-right-radius: 4px;
     }
 
-    /* Image in bubble */
     .bubble img {
       max-width: 100%;
       border-radius: var(--radius-xs);
@@ -529,7 +500,7 @@
     /* ── New chat btn ── */
     #newChatBtn { display: none; }
 
-    /* ── Confidential badge on bot messages ── */
+    /* ── Confidential badge ── */
     .conf-badge {
       display: inline-flex;
       align-items: center;
@@ -556,25 +527,27 @@
       text-decoration: none;
     }
     .nar-inline-link:hover { text-decoration: underline; }
-
   </style>
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "x13hxsbvnw");
-    </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x13hxsbvnw");
+  </script>
 </head>
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="navbar-left">
-    <div class="logo-mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </div>
+    <img
+      src="https://github.com/newage-official/ai_portal/blob/main/static/logo.png?raw=true"
+      alt="New Age AI"
+      class="logo-img"
+    />
     <div>
       <span class="brand-name">New Age</span>
       <span class="brand-tag">/ AI Support</span>
@@ -610,9 +583,11 @@
 
     <!-- Welcome screen -->
     <div class="welcome" id="welcome">
-      <div class="welcome-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
+      <img
+        src="https://github.com/newage-official/ai_portal/blob/main/static/logo.png?raw=true"
+        alt="New Age AI"
+        class="welcome-logo"
+      />
       <h2>How can I help you today?</h2>
       <p>Ask me anything about New Age — teams, policies, divisions, contacts, or NAR requests.</p>
       <div class="suggestions">
@@ -643,7 +618,6 @@
       </div>
       <div class="input-bottom">
         <div class="input-actions">
-          <!-- Image upload -->
           <button class="action-btn" title="Attach image" onclick="document.getElementById('imageInput').click()">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </button>
@@ -662,16 +636,14 @@
 
 <script>
   /* ── State ── */
-  const pendingImages = []; // { file, dataUrl }
+  const pendingImages = [];
   let isTyping = false;
   let msgCount = 0;
 
   /* ── Load user from session ── */
   window.addEventListener('DOMContentLoaded', () => {
-    // Read user info from sessionStorage (set by login page)
     const savedUser = sessionStorage.getItem('loggedInUser');
     if (!savedUser) {
-      // Not logged in — redirect to login page
       window.location.href = '/';
       return;
     }
@@ -679,13 +651,11 @@
     document.getElementById('userName').textContent = user.name;
     document.getElementById('userAvatar').textContent = user.initials;
 
-    // Show Admin button only for Manager/Admin roles
     const adminRoles = ['Manager', 'Admin', 'HR', 'Operations'];
     if (adminRoles.includes(user.role)) {
       document.getElementById('adminBtn').style.display = '';
     }
 
-    // Enable send on input
     document.getElementById('msgInput').addEventListener('input', updateSendBtn);
   });
 
@@ -754,13 +724,11 @@
     if (!text && images.length === 0) return;
     if (isTyping) return;
 
-    // Protection 1: Minimum message length
     if (text && text.length < 3) {
       alert('Please type a proper question!');
       return;
     }
 
-    // Protection 2: Simple cache — avoid duplicate API calls
     const cacheKey = text.trim().toLowerCase();
     if (messageCache[cacheKey]) {
       document.getElementById('welcome') && (document.getElementById('welcome').style.display = 'none');
@@ -773,21 +741,17 @@
       return;
     }
 
-    // Hide welcome screen
     document.getElementById('welcome').style.display = 'none';
     document.getElementById('newChatBtn').style.display = 'flex';
 
-    // Render user message
     addMessage('user', text, images);
 
-    // Clear input
     input.value = '';
     input.style.height = 'auto';
     pendingImages.length = 0;
     renderImagePreviews();
     updateSendBtn();
 
-    // Show typing and call Groq API
     showTyping();
     await callGroqAPI(text, images);
   }
@@ -811,18 +775,15 @@
       ).join('');
     }
 
-    // Parse NAR suggestion block out of bot reply
     let narCardHtml = '';
     let cleanText   = text;
     if (!isUser) {
       const narStart = text.indexOf(':::nar-suggestion');
       if (narStart !== -1) {
         const jsonStart = text.indexOf('{', narStart);
-        // Find closing ::: — if missing, treat end of string as end
         let narEnd = text.indexOf(':::', narStart + 17);
         if (narEnd === -1) narEnd = text.length;
         if (jsonStart !== -1) {
-          // Find last } before narEnd
           const jsonEnd = text.lastIndexOf('}', narEnd) + 1;
           const jsonStr = text.slice(jsonStart, jsonEnd).trim();
           try {
@@ -855,7 +816,7 @@
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  /* ── Build simple NAR inline link ── */
+  /* ── Build NAR inline link ── */
   function buildNarCard(data) {
     const MONDAY_BOARD_URL = 'https://forms.monday.com/forms/37620e81b30597f2867f3cbdc8aa2e51?r=use1&Request+Type=';
     return `<a href="${MONDAY_BOARD_URL}" target="_blank" class="nar-inline-link">→ Submit ${data.title}</a>`;
@@ -900,9 +861,11 @@
     const msgs = document.getElementById('messages');
     msgs.innerHTML = `
       <div class="welcome" id="welcome">
-        <div class="welcome-icon">
-          <svg viewBox="0 0 24 24" stroke="var(--muted)" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        <img
+          src="https://github.com/newage-official/ai_portal/blob/main/static/logo.png?raw=true"
+          alt="New Age AI"
+          class="welcome-logo"
+        />
         <h2>How can I help you today?</h2>
         <p>Ask me anything about New Age — teams, policies, divisions, contacts, or NAR requests.</p>
         <div class="suggestions">
@@ -931,11 +894,8 @@
   }
 
   function renderText(str) {
-    // Strip NAR suggestion block — handles multiline
     const narStart = str.indexOf(':::nar-suggestion');
-    if (narStart !== -1) {
-      str = str.slice(0, narStart).trim();
-    }
+    if (narStart !== -1) str = str.slice(0, narStart).trim();
     str = str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     str = str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     str = str.replace(/^### (.+)$/gm, '<strong>$1</strong>');
@@ -945,154 +905,41 @@
     return str;
   }
 
-
   /* ══════════════════════════════════════════════
      NAR DATABASE — all 28 request types
   ══════════════════════════════════════════════ */
   const NAR_TYPES = [
-    {
-      id:1, title:'General Requests', category:'General',
-      keywords:['general','misc','other','help','info'],
-      fields:'• Request Title: Short summary of what you need\n• Description: Explain your request in detail\n• Priority: Low / Medium / High\n• Any supporting documents: Attach if relevant'
-    },
-    {
-      id:2, title:'Access Request', category:'IT',
-      keywords:['access','permission','login','account','tool','software','system','monday','slack','drive','github','credentials'],
-      fields:'• Tool / Platform Name: e.g. Monday.com, Slack, GitHub, Google Drive\n• Type of Access Needed: View only / Edit / Admin\n• Reason: Why do you need this access?\n• Urgency: When do you need it by?'
-    },
-    {
-      id:3, title:'Leave Request', category:'HR',
-      keywords:['leave','vacation','time off','holiday','sick','absence','pto','break'],
-      fields:'• Leave Type: Paid / Unpaid / Sick\n• From Date: Start date of leave\n• To Date: End date of leave\n• Total Days: Number of working days\n• Reason: Brief reason for leave\n• Coverage Plan: Who will handle your work while you\'re away?'
-    },
-    {
-      id:4, title:'Purchase Request', category:'Finance',
-      keywords:['buy','purchase','order','laptop','monitor','hardware','equipment','device','phone','keyboard','mouse','screen'],
-      fields:'• Item Name: What do you want to purchase?\n• Quantity: How many units?\n• Estimated Cost: Approximate price in INR\n• Vendor / Link: Where to buy from (Amazon link etc.)\n• Reason / Justification: Why is this needed for your work?\n• Urgency: When do you need it?'
-    },
-    {
-      id:5, title:'Payment Request', category:'Finance',
-      keywords:['payment','pay','invoice','reimbursement','expense','reimburse','refund','bill','money'],
-      fields:'• Payment Type: Reimbursement / Invoice / Vendor Payment\n• Amount: Exact amount in INR\n• Description: What was this expense for?\n• Date of Expense: When was it incurred?\n• Payment Method Used: UPI / Card / Cash\n• Attachment: Upload receipt or invoice (mandatory)'
-    },
-    {
-      id:6, title:'Contract Change', category:'Legal',
-      keywords:['contract','agreement','change','modify','update','terms','scope','role','rate','hours'],
-      fields:'• Current Contract Details: Your current role / rate / hours\n• Requested Change: What exactly needs to change?\n• Reason: Why is this change needed?\n• Effective Date: From when should this apply?\n• Supporting Evidence: Any email threads or agreements to attach?'
-    },
-    {
-      id:7, title:'Billing / Subscription Concern', category:'Finance',
-      keywords:['billing','subscription','charge','overcharge','plan','renewal','pricing','overage'],
-      fields:'• Subscription / Service Name: Which tool or service?\n• Issue Type: Overcharge / Wrong Plan / Unexpected Charge\n• Amount in Question: How much was charged?\n• Date of Charge: When did this appear?\n• Expected Amount: What should it have been?\n• Screenshot: Attach billing screenshot'
-    },
-    {
-      id:8, title:'Subscription Cancellation Request', category:'Finance',
-      keywords:['cancel','cancellation','unsubscribe','stop subscription','terminate plan'],
-      fields:'• Service / Tool Name: What subscription to cancel?\n• Current Plan: Which plan are you on?\n• Reason for Cancellation: Why cancel?\n• Last Required Date: When can it be cancelled from?\n• Alternative: Is there a replacement tool being used?'
-    },
-    {
-      id:9, title:'Data Report Blocker', category:'Ops',
-      keywords:['report blocked','data stuck','blocker','report issue','data error','dashboard broken','analytics issue'],
-      fields:'• Report / Dashboard Name: Which report is blocked?\n• Platform: Monday.com / Google Sheets / Looker / Other\n• Issue Description: What exactly is broken or missing?\n• Since When: When did this blocker start?\n• Impact: What work is being blocked because of this?\n• Screenshot: Attach error or broken state screenshot'
-    },
-    {
-      id:10, title:'Data Analysis and Reporting Request', category:'Ops',
-      keywords:['data analysis','reporting','analytics','dashboard','metrics','stats','report','insight','kpi'],
-      fields:'• Report Name / Title: What should this report be called?\n• Data Source: Where is the data coming from?\n• Metrics Needed: What KPIs or numbers do you need?\n• Time Period: Date range for the report\n• Format: Dashboard / Spreadsheet / PDF\n• Deadline: When do you need this by?'
-    },
-    {
-      id:11, title:'Grievance / Strategic Alignment Requests', category:'HR',
-      keywords:['grievance','complaint','alignment','strategy','concern','issue with team','unfair','conflict','disagreement'],
-      fields:'• Subject: One line summary of the grievance\n• People Involved: Who is this regarding? (names/roles)\n• Incident Date: When did this happen?\n• Detailed Description: Explain the full situation factually\n• What Resolution Are You Seeking?: What outcome do you want?\n• Is this confidential?: Yes / No'
-    },
-    {
-      id:12, title:'Onboard New Access', category:'IT',
-      keywords:['onboard','new joiner','new employee','new access','setup','new hire','joining','first day','create account'],
-      fields:'• New Member Name: Full name of the person joining\n• Role / Designation: Their job title\n• Start Date: When do they join?\n• Tools Required: List all tools they need access to (Slack, Monday, Drive, GitHub etc.)\n• Access Level: For each tool — View / Edit / Admin\n• Reporting Manager: Who will they report to?'
-    },
-    {
-      id:13, title:'Complaint', category:'HR',
-      keywords:['complaint','problem','unhappy','dissatisfied','bad experience','report problem'],
-      fields:'• Complaint Subject: Brief title\n• Against Whom / What: Person, team, or process\n• Date of Incident: When did this happen?\n• Description: Explain clearly what happened\n• Evidence: Any screenshots, messages, or documents?\n• Desired Resolution: What do you want done about it?'
-    },
-    {
-      id:14, title:'Offer Release Request', category:'HR',
-      keywords:['offer letter','offer release','job offer','send offer','hiring offer','appointment letter'],
-      fields:'• Candidate Name: Full name\n• Role Being Offered: Job title\n• Division: Product / Services\n• Agreed Rate: Compensation as discussed\n• Start Date: Expected joining date\n• Contract Type: C1 / C2 / Freelance\n• Approved By: Who approved this hire?'
-    },
-    {
-      id:15, title:'Contract Termination', category:'Legal',
-      keywords:['terminate','termination','end contract','fire','exit','notice period','last day'],
-      fields:'• Person\'s Name: Who is being offboarded?\n• Role: Their designation\n• Last Working Day: Final date\n• Reason for Termination: Performance / Mutual / Resignation / Other\n• Notice Period Served: Yes / No / Waived\n• Access Revocation Required: List tools to revoke (Slack, Monday, GitHub etc.)\n• Final Payment Status: Settled / Pending'
-    },
-    {
-      id:16, title:'Resignation Letter', category:'HR',
-      keywords:['resign','resignation','quit','leaving','notice','last working day','stepping down'],
-      fields:'• Your Name: Full name\n• Current Role: Your designation\n• Notice Period: How many weeks/days notice are you giving?\n• Last Working Day: Your proposed final date\n• Reason (Optional): Brief reason if comfortable sharing\n• Handover Plan: What will you hand over and to whom?'
-    },
-    {
-      id:17, title:'Job Requisition', category:'HR',
-      keywords:['hire','hiring','job opening','vacancy','recruit','new position','headcount','open role'],
-      fields:'• Role Title: What position to hire for?\n• Division: Product / Services\n• Number of Openings: How many people needed?\n• Key Skills Required: Must-have skills\n• Experience Level: Fresher / 1-2 yrs / 3-5 yrs / Senior\n• Expected Start Date: When should they ideally join?\n• Budget Range: Approximate compensation range\n• Reason for Hire: New role / Replacement / Growth'
-    },
-    {
-      id:18, title:'HR Support', category:'HR',
-      keywords:['hr','human resources','hr help','policy','payroll','hr query','documents','certificate','letter'],
-      fields:'• Query Type: Payroll / Document / Policy / Certificate / Other\n• Description: What do you need help with?\n• Document Needed (if any): Experience letter / Salary certificate / NOC etc.\n• Urgency: When do you need this?\n• Any Reference: Previous conversation or ticket number if applicable'
-    },
-    {
-      id:19, title:'Project Request', category:'General',
-      keywords:['project','new project','start project','initiate','kick off','new work','client project'],
-      fields:'• Project Name: What to call this project?\n• Project Type: Internal / Client / R&D\n• Objective: What should this project achieve?\n• Scope: What is in scope and out of scope?\n• Team Required: Roles needed (dev, designer, tester etc.)\n• Timeline: Expected start and end date\n• Budget Estimate: If applicable'
-    },
-    {
-      id:20, title:'Automation Request', category:'Ops',
-      keywords:['automate','automation','workflow','bot','script','automatic','zapier','make','n8n','monday automation'],
-      fields:'• What to Automate: Describe the current manual process\n• Tools Involved: Which apps need to be connected?\n• Trigger: What event should start the automation?\n• Action: What should happen automatically?\n• Expected Output: What\'s the end result?\n• Priority: How critical is this automation?'
-    },
-    {
-      id:21, title:'Process Change Request', category:'Ops',
-      keywords:['process','change process','improve process','workflow change','sop','procedure','operations'],
-      fields:'• Current Process: Describe how it works today\n• Proposed Change: What should change and how?\n• Reason: Why is this change needed?\n• Impact: Who / what will be affected?\n• Implementation Timeline: When should this go live?\n• Owner: Who will be responsible for this new process?'
-    },
-    {
-      id:22, title:'Root Cause Analysis', category:'Ops',
-      keywords:['root cause','rca','why did','investigation','post mortem','incident','bug cause','what went wrong'],
-      fields:'• Incident Title: Short name for what went wrong\n• Date & Time: When did it happen?\n• What Happened: Clear description of the issue\n• Impact: What was affected (users, revenue, features)?\n• Immediate Fix Applied: What was done to resolve it temporarily?\n• Root Cause (if known): What caused it?\n• Permanent Fix: What needs to be done to prevent recurrence?'
-    },
-    {
-      id:23, title:'Emergency Protocol', category:'General',
-      keywords:['emergency','urgent','critical','asap','immediately','down','outage','crisis','production issue'],
-      fields:'• Emergency Type: App Down / Data Loss / Security Breach / Other\n• Severity: P0 (total outage) / P1 (major) / P2 (partial)\n• What Is Affected: Which app, feature, or system?\n• Since When: When did this start?\n• Current Impact: How many users affected?\n• Steps Already Taken: What have you tried so far?\n• Who Knows: Which team members are already aware?'
-    },
-    {
-      id:24, title:'Growth Team Bug Report', category:'Growth',
-      keywords:['bug','error','crash','broken','not working','fix','glitch','app crash','defect'],
-      fields:'• App / Feature Name: Where is the bug?\n• Bug Description: What is happening vs what should happen?\n• Steps to Reproduce: Step-by-step how to trigger the bug\n• Device / Platform: Android / iOS / Web + device model\n• App Version: Which version are you on?\n• Frequency: Always / Sometimes / Rarely\n• Screenshot or Recording: Attach evidence'
-    },
-    {
-      id:25, title:'Training Required', category:'HR',
-      keywords:['training','learn','course','skill','workshop','upskill','tutorial','mentorship','education'],
-      fields:'• Training Topic: What skill or subject?\n• Training Type: Online course / Workshop / Internal session / Mentorship\n• Why Needed: How will this help your work?\n• Preferred Timeline: When do you want to complete it?\n• Estimated Cost (if paid): Amount in INR\n• Platform / Provider: Udemy / Coursera / YouTube / Other'
-    },
-    {
-      id:26, title:'Meeting Request with CEO', category:'Management',
-      keywords:['ceo','meeting with ceo','talk to ceo','bhargav','leadership','executive','founder'],
-      fields:'• Your Name & Role: Who is requesting the meeting?\n• Meeting Purpose: What do you want to discuss? (1-2 lines)\n• Agenda Points: List the specific topics (max 3 recommended)\n• Preferred Duration: 15 min / 30 min / 45 min\n• Preferred Time Slot: Give 2-3 options\n• Is this Urgent?: Yes / No — explain why if yes'
-    },
-    {
-      id:27, title:'WFH Request', category:'HR',
-      keywords:['wfh','work from home','remote','work remotely','home office','apply for wfh','want to wfh'],
-      fields:'• Your Name: Full name\n• WFH Date(s): Which day(s) do you want to WFH?\n• Reason: Why are you requesting WFH?\n• Will you be available on calls?: Yes / No\n• Any impact on deliverables?: Mention if any deadlines are affected\n• Manager Informed?: Yes / No'
-    },
-    {
-      id:28, title:'Maintenance Task', category:'Ops',
-      keywords:['maintenance','maintain','upkeep','routine task','scheduled','infra','server maintenance'],
-      fields:'• Task Title: What needs to be maintained?\n• System / Tool: Which server, app, or infrastructure?\n• Type: Routine / Emergency / Upgrade\n• Scheduled Date & Time: When should this run?\n• Expected Downtime: Will there be any outage? How long?\n• Who Will Execute: Person responsible\n• Rollback Plan: What to do if something goes wrong?'
-    },
+    { id:1, title:'General Requests', category:'General', keywords:['general','misc','other','help','info'], fields:'• Request Title: Short summary of what you need\n• Description: Explain your request in detail\n• Priority: Low / Medium / High\n• Any supporting documents: Attach if relevant' },
+    { id:2, title:'Access Request', category:'IT', keywords:['access','permission','login','account','tool','software','system','monday','slack','drive','github','credentials'], fields:'• Tool / Platform Name: e.g. Monday.com, Slack, GitHub, Google Drive\n• Type of Access Needed: View only / Edit / Admin\n• Reason: Why do you need this access?\n• Urgency: When do you need it by?' },
+    { id:3, title:'Leave Request', category:'HR', keywords:['leave','vacation','time off','holiday','sick','absence','pto','break'], fields:'• Leave Type: Paid / Unpaid / Sick\n• From Date: Start date of leave\n• To Date: End date of leave\n• Total Days: Number of working days\n• Reason: Brief reason for leave\n• Coverage Plan: Who will handle your work while you\'re away?' },
+    { id:4, title:'Purchase Request', category:'Finance', keywords:['buy','purchase','order','laptop','monitor','hardware','equipment','device','phone','keyboard','mouse','screen'], fields:'• Item Name: What do you want to purchase?\n• Quantity: How many units?\n• Estimated Cost: Approximate price in INR\n• Vendor / Link: Where to buy from\n• Reason / Justification: Why is this needed?\n• Urgency: When do you need it?' },
+    { id:5, title:'Payment Request', category:'Finance', keywords:['payment','pay','invoice','reimbursement','expense','reimburse','refund','bill','money'], fields:'• Payment Type: Reimbursement / Invoice / Vendor Payment\n• Amount: Exact amount in INR\n• Description: What was this expense for?\n• Date of Expense: When was it incurred?\n• Payment Method Used: UPI / Card / Cash\n• Attachment: Upload receipt or invoice (mandatory)' },
+    { id:6, title:'Contract Change', category:'Legal', keywords:['contract','agreement','change','modify','update','terms','scope','role','rate','hours'], fields:'• Current Contract Details: Your current role / rate / hours\n• Requested Change: What exactly needs to change?\n• Reason: Why is this change needed?\n• Effective Date: From when should this apply?\n• Supporting Evidence: Any email threads or agreements to attach?' },
+    { id:7, title:'Billing / Subscription Concern', category:'Finance', keywords:['billing','subscription','charge','overcharge','plan','renewal','pricing','overage'], fields:'• Subscription / Service Name: Which tool or service?\n• Issue Type: Overcharge / Wrong Plan / Unexpected Charge\n• Amount in Question: How much was charged?\n• Date of Charge: When did this appear?\n• Expected Amount: What should it have been?\n• Screenshot: Attach billing screenshot' },
+    { id:8, title:'Subscription Cancellation Request', category:'Finance', keywords:['cancel','cancellation','unsubscribe','stop subscription','terminate plan'], fields:'• Service / Tool Name: What subscription to cancel?\n• Current Plan: Which plan are you on?\n• Reason for Cancellation: Why cancel?\n• Last Required Date: When can it be cancelled from?\n• Alternative: Is there a replacement tool being used?' },
+    { id:9, title:'Data Report Blocker', category:'Ops', keywords:['report blocked','data stuck','blocker','report issue','data error','dashboard broken','analytics issue'], fields:'• Report / Dashboard Name: Which report is blocked?\n• Platform: Monday.com / Google Sheets / Looker / Other\n• Issue Description: What exactly is broken or missing?\n• Since When: When did this blocker start?\n• Impact: What work is being blocked?\n• Screenshot: Attach error screenshot' },
+    { id:10, title:'Data Analysis and Reporting Request', category:'Ops', keywords:['data analysis','reporting','analytics','dashboard','metrics','stats','report','insight','kpi'], fields:'• Report Name / Title: What should this report be called?\n• Data Source: Where is the data coming from?\n• Metrics Needed: What KPIs or numbers do you need?\n• Time Period: Date range for the report\n• Format: Dashboard / Spreadsheet / PDF\n• Deadline: When do you need this by?' },
+    { id:11, title:'Grievance / Strategic Alignment Requests', category:'HR', keywords:['grievance','complaint','alignment','strategy','concern','issue with team','unfair','conflict','disagreement'], fields:'• Subject: One line summary of the grievance\n• People Involved: Who is this regarding?\n• Incident Date: When did this happen?\n• Detailed Description: Explain the full situation\n• What Resolution Are You Seeking?: What outcome do you want?\n• Is this confidential?: Yes / No' },
+    { id:12, title:'Onboard New Access', category:'IT', keywords:['onboard','new joiner','new employee','new access','setup','new hire','joining','first day','create account'], fields:'• New Member Name: Full name of the person joining\n• Role / Designation: Their job title\n• Start Date: When do they join?\n• Tools Required: List all tools needed\n• Access Level: For each tool — View / Edit / Admin\n• Reporting Manager: Who will they report to?' },
+    { id:13, title:'Complaint', category:'HR', keywords:['complaint','problem','unhappy','dissatisfied','bad experience','report problem'], fields:'• Complaint Subject: Brief title\n• Against Whom / What: Person, team, or process\n• Date of Incident: When did this happen?\n• Description: Explain clearly what happened\n• Evidence: Any screenshots, messages, or documents?\n• Desired Resolution: What do you want done?' },
+    { id:14, title:'Offer Release Request', category:'HR', keywords:['offer letter','offer release','job offer','send offer','hiring offer','appointment letter'], fields:'• Candidate Name: Full name\n• Role Being Offered: Job title\n• Division: Product / Services\n• Agreed Rate: Compensation as discussed\n• Start Date: Expected joining date\n• Contract Type: C1 / C2 / Freelance\n• Approved By: Who approved this hire?' },
+    { id:15, title:'Contract Termination', category:'Legal', keywords:['terminate','termination','end contract','fire','exit','notice period','last day'], fields:'• Person\'s Name: Who is being offboarded?\n• Role: Their designation\n• Last Working Day: Final date\n• Reason for Termination: Performance / Mutual / Resignation / Other\n• Notice Period Served: Yes / No / Waived\n• Access Revocation Required: List tools to revoke\n• Final Payment Status: Settled / Pending' },
+    { id:16, title:'Resignation Letter', category:'HR', keywords:['resign','resignation','quit','leaving','notice','last working day','stepping down'], fields:'• Your Name: Full name\n• Current Role: Your designation\n• Notice Period: How many weeks/days notice?\n• Last Working Day: Your proposed final date\n• Reason (Optional): Brief reason if comfortable sharing\n• Handover Plan: What will you hand over and to whom?' },
+    { id:17, title:'Job Requisition', category:'HR', keywords:['hire','hiring','job opening','vacancy','recruit','new position','headcount','open role'], fields:'• Role Title: What position to hire for?\n• Division: Product / Services\n• Number of Openings: How many people needed?\n• Key Skills Required: Must-have skills\n• Experience Level: Fresher / 1-2 yrs / 3-5 yrs / Senior\n• Expected Start Date: When should they ideally join?\n• Budget Range: Approximate compensation range\n• Reason for Hire: New role / Replacement / Growth' },
+    { id:18, title:'HR Support', category:'HR', keywords:['hr','human resources','hr help','policy','payroll','hr query','documents','certificate','letter'], fields:'• Query Type: Payroll / Document / Policy / Certificate / Other\n• Description: What do you need help with?\n• Document Needed (if any): Experience letter / Salary certificate / NOC etc.\n• Urgency: When do you need this?' },
+    { id:19, title:'Project Request', category:'General', keywords:['project','new project','start project','initiate','kick off','new work','client project'], fields:'• Project Name: What to call this project?\n• Project Type: Internal / Client / R&D\n• Objective: What should this project achieve?\n• Scope: What is in and out of scope?\n• Team Required: Roles needed\n• Timeline: Expected start and end date\n• Budget Estimate: If applicable' },
+    { id:20, title:'Automation Request', category:'Ops', keywords:['automate','automation','workflow','bot','script','automatic','zapier','make','n8n','monday automation'], fields:'• What to Automate: Describe the current manual process\n• Tools Involved: Which apps need to be connected?\n• Trigger: What event should start the automation?\n• Action: What should happen automatically?\n• Expected Output: What\'s the end result?\n• Priority: How critical is this automation?' },
+    { id:21, title:'Process Change Request', category:'Ops', keywords:['process','change process','improve process','workflow change','sop','procedure','operations'], fields:'• Current Process: Describe how it works today\n• Proposed Change: What should change and how?\n• Reason: Why is this change needed?\n• Impact: Who / what will be affected?\n• Implementation Timeline: When should this go live?\n• Owner: Who will be responsible?' },
+    { id:22, title:'Root Cause Analysis', category:'Ops', keywords:['root cause','rca','why did','investigation','post mortem','incident','bug cause','what went wrong'], fields:'• Incident Title: Short name for what went wrong\n• Date & Time: When did it happen?\n• What Happened: Clear description of the issue\n• Impact: What was affected?\n• Immediate Fix Applied: What was done temporarily?\n• Root Cause (if known): What caused it?\n• Permanent Fix: What needs to be done to prevent recurrence?' },
+    { id:23, title:'Emergency Protocol', category:'General', keywords:['emergency','urgent','critical','asap','immediately','down','outage','crisis','production issue'], fields:'• Emergency Type: App Down / Data Loss / Security Breach / Other\n• Severity: P0 (total outage) / P1 (major) / P2 (partial)\n• What Is Affected: Which app, feature, or system?\n• Since When: When did this start?\n• Current Impact: How many users affected?\n• Steps Already Taken: What have you tried?\n• Who Knows: Which team members are already aware?' },
+    { id:24, title:'Growth Team Bug Report', category:'Growth', keywords:['bug','error','crash','broken','not working','fix','glitch','app crash','defect'], fields:'• App / Feature Name: Where is the bug?\n• Bug Description: What is happening vs what should happen?\n• Steps to Reproduce: Step-by-step how to trigger the bug\n• Device / Platform: Android / iOS / Web + device model\n• App Version: Which version are you on?\n• Frequency: Always / Sometimes / Rarely\n• Screenshot or Recording: Attach evidence' },
+    { id:25, title:'Training Required', category:'HR', keywords:['training','learn','course','skill','workshop','upskill','tutorial','mentorship','education'], fields:'• Training Topic: What skill or subject?\n• Training Type: Online course / Workshop / Internal session / Mentorship\n• Why Needed: How will this help your work?\n• Preferred Timeline: When do you want to complete it?\n• Estimated Cost (if paid): Amount in INR\n• Platform / Provider: Udemy / Coursera / YouTube / Other' },
+    { id:26, title:'Meeting Request with CEO', category:'Management', keywords:['ceo','meeting with ceo','talk to ceo','bhargav','leadership','executive','founder'], fields:'• Your Name & Role: Who is requesting the meeting?\n• Meeting Purpose: What do you want to discuss?\n• Agenda Points: List specific topics (max 3)\n• Preferred Duration: 15 min / 30 min / 45 min\n• Preferred Time Slot: Give 2-3 options\n• Is this Urgent?: Yes / No — explain why if yes' },
+    { id:27, title:'WFH Request', category:'HR', keywords:['wfh','work from home','remote','work remotely','home office','apply for wfh','want to wfh'], fields:'• Your Name: Full name\n• WFH Date(s): Which day(s)?\n• Reason: Why are you requesting WFH?\n• Will you be available on calls?: Yes / No\n• Any impact on deliverables?: Mention if any deadlines are affected\n• Manager Informed?: Yes / No' },
+    { id:28, title:'Maintenance Task', category:'Ops', keywords:['maintenance','maintain','upkeep','routine task','scheduled','infra','server maintenance'], fields:'• Task Title: What needs to be maintained?\n• System / Tool: Which server, app, or infrastructure?\n• Type: Routine / Emergency / Upgrade\n• Scheduled Date & Time: When should this run?\n• Expected Downtime: Will there be any outage? How long?\n• Who Will Execute: Person responsible\n• Rollback Plan: What to do if something goes wrong?' },
   ];
 
-  /* ── Keyword-score a query against NAR types, return top 3 ── */
+  /* ── Keyword-score a query against NAR types ── */
   function matchNarTypes(query) {
     const q = query.toLowerCase();
     return NAR_TYPES
@@ -1110,21 +957,17 @@
 
   async function callGroqAPI(userText, images = []) {
     try {
-      let userContent = userText || '';
-
-      // Build message with images if present
       let userMessage;
       if (images.length > 0) {
-        // Send images as base64 to backend for vision model
         const imageData = images.map(img => ({
           dataUrl: img.dataUrl,
           type: img.file ? img.file.type : 'image/jpeg'
         }));
-        userMessage = { role: 'user', content: userContent, images: imageData };
-        chatHistory.push({ role: 'user', content: userContent || '[Image attached]' });
+        userMessage = { role: 'user', content: userText, images: imageData };
+        chatHistory.push({ role: 'user', content: userText || '[Image attached]' });
       } else {
-        userMessage = { role: 'user', content: userContent };
-        chatHistory.push({ role: 'user', content: userContent });
+        userMessage = { role: 'user', content: userText };
+        chatHistory.push({ role: 'user', content: userText });
       }
 
       const response = await fetch('/api/chat', {
@@ -1135,12 +978,9 @@
 
       const data = await response.json();
 
-      if (!data.success) {
-        throw new Error(data.message || 'Something went wrong');
-      }
+      if (!data.success) throw new Error(data.message || 'Something went wrong');
 
       const reply = data.reply;
-      console.log('RAW REPLY:', reply);
       chatHistory.push({ role: 'assistant', content: reply });
       if (chatHistory.length > 20) chatHistory.splice(0, 2);
 
@@ -1153,7 +993,6 @@
       console.error('Chat API error:', err);
     }
   }
-
 </script>
 
 </body>
