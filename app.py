@@ -46,6 +46,9 @@ GROQ_API_KEYS  = [
 ]
 GROQ_API_KEYS = [k for k in GROQ_API_KEYS if k]
 
+EMAIL_ADDRESS      = os.getenv('EMAIL_ADDRESS', '')
+EMAIL_APP_PASSWORD = os.getenv('EMAIL_APP_PASSWORD', '')
+
 # ══════════════════════════════════════════
 # HELPERS
 # ══════════════════════════════════════════
@@ -66,6 +69,43 @@ def save_whitelist(emails):
 def is_whitelisted(email):
     whitelist = load_whitelist()
     return email.lower() in [e.lower() for e in whitelist]
+
+
+def send_invite_email(to_email):
+    if not EMAIL_ADDRESS or not EMAIL_APP_PASSWORD:
+        return False
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+
+        msg = MIMEMultipart()
+        msg['From']    = EMAIL_ADDRESS
+        msg['To']      = to_email
+        msg['Subject'] = "You're invited to the New Age Internal AI Portal"
+
+        body = f"""Hi!
+
+You've been invited to access the New Age Internal AI Portal.
+
+Sign up here: https://moncey10-ai-portal.hf.space/signup
+
+Use your email: {to_email}
+
+Once you sign up, you can login immediately.
+
+— New Age Team"""
+
+        msg.attach(MIMEText(body, 'plain'))
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=5)
+        server.starttls()
+        server.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
+        server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"Email error: {e}")
+        return False
 
 # ── User helpers ──
 def load_users():
@@ -175,6 +215,35 @@ def change_password_page():
 def admin_page():
     return send_from_directory('static', 'admin.html')
 
+
+
+@app.route('/api/test-email', methods=['GET'])
+def test_email():
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+
+        email_address = os.getenv('EMAIL_ADDRESS', '')
+        email_password = os.getenv('EMAIL_APP_PASSWORD', '')
+
+        msg = MIMEMultipart()
+        msg['From']    = email_address
+        msg['To']      = 'monap1281@gmail.com'
+        msg['Subject'] = 'Test'
+        msg.attach(MIMEText('Test email', 'plain'))
+
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
+        server.starttls()
+        server.login(email_address, email_password)
+        server.sendmail(email_address, 'monap1281@gmail.com', msg.as_string())
+        server.quit()
+        return jsonify({'sent': True, 'from': email_address})
+    except Exception as e:
+        return jsonify({'sent': False, 'error': str(e), 'email': os.getenv('EMAIL_ADDRESS', 'NOT SET')})
+
+
+
 # ══════════════════════════════════════════
 # AUTH ROUTES
 # ══════════════════════════════════════════
@@ -255,7 +324,11 @@ def add_to_whitelist():
         return jsonify({'success': False, 'message': 'Email already in whitelist.'})
     wl.append(email)
     save_whitelist(wl)
-    return jsonify({'success': True, 'message': f'{email} added to whitelist.'})
+    email_sent = send_invite_email(email)
+    msg = f'{email} added to whitelist.'
+    if email_sent:
+        msg += ' Invite email sent!'
+    return jsonify({'success': True, 'message': msg})
 
 @app.route('/api/admin/whitelist/upload-csv', methods=['POST'])
 def upload_whitelist_csv():
@@ -282,7 +355,14 @@ def upload_whitelist_csv():
                 wl.append(e)
                 added += 1
         save_whitelist(wl)
-        return jsonify({'success': True, 'message': f'{added} emails added to whitelist.'})
+        emails_sent = 0
+        for e in wl[-added:]:
+            if send_invite_email(e):
+                emails_sent += 1
+        msg = f'{added} emails added to whitelist.'
+        if emails_sent > 0:
+            msg += f' {emails_sent} invite emails sent!'
+        return jsonify({'success': True, 'message': msg})
     except Exception as ex:
         return jsonify({'success': False, 'message': f'Error reading CSV: {str(ex)}'})
 
