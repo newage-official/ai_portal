@@ -51,6 +51,12 @@
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 1rem;
     }
+    .logo-img{
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
     .logo-box svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .logo-area h1 { font-size: 1.125rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
     .logo-area p  { font-size: 0.8125rem; color: var(--muted); margin-top: 3px; }
@@ -112,9 +118,7 @@
 <div class="card">
 
   <div class="logo-area">
-    <div class="logo-box">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </div>
+    <img src="/static/logo.png" alt="New Age Logo" class="logo-img">
     <h1>Request Access</h1>
     <p>Submit your details for admin approval</p>
   </div>
