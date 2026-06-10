@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Internal Login — Company Chatbot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F5F4F0;
+      --surface:   #FFFFFF;
+      --border:    #E2E0DA;
+      --border-strong: #C8C6BF;
+      --text:      #1A1916;
+      --muted:     #6B6A65;
+      --hint:      #9E9C97;
+      --accent:    #1A1916;
+      --accent-fg: #FFFFFF;
+      --danger-bg: #FEF2F2;
+      --danger-bd: #FECACA;
+      --danger-tx: #B91C1C;
+      --success-bg:#F0FDF4;
+      --success-bd:#BBF7D0;
+      --success-tx:#15803D;
+      --radius:    10px;
+      --radius-sm: 6px;
+      --shadow:    0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* subtle dot grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, #C8C6BF 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.35s ease both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Logo area ── */
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .logo-box {
+      width: 52px;
+      height: 52px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo-box svg {
+      width: 26px;
+      height: 26px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Replace .logo-box with <img> tag when you have a real logo:
+       <img src="your-logo.png" alt="Company Logo" style="height:52px;" /> */
+
+    .logo-area h1 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-area p {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Alert banners ── */
+    .alert {
+      display: none;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      border: 1px solid;
+    }
+    .alert.show { display: flex; }
+    .alert.error   { background: var(--danger-bg);  border-color: var(--danger-bd);  color: var(--danger-tx); }
+    .alert.success { background: var(--success-bg); border-color: var(--success-bd); color: var(--success-tx); }
+    .alert svg { flex-shrink: 0; width: 15px; height: 15px; margin-top: 1px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 11px;
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+      stroke: var(--hint);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px 0 36px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input::placeholder { color: var(--hint); }
+
+    input:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(26,25,22,0.07);
+    }
+
+    input.error-field { border-color: var(--danger-bd); }
+
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--hint);
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .pw-toggle:hover { color: var(--muted); }
+    .pw-toggle svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── Remember + Forgot row ── */
+    .row-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .forgot-link {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .forgot-link:hover { color: var(--text); border-color: var(--border-strong); }
+
+    /* ── Submit button ── */
+    .btn-submit {
+      width: 100%;
+      height: 42px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+    .btn-submit:hover   { opacity: 0.85; }
+    .btn-submit:active  { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--hint);
+      margin-top: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 1.25rem 0;
+      font-size: 0.75rem;
+      color: var(--hint);
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+  </style>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "x13hxsbvnw");
+    </script>
+</head>
+<body>
+
+<div class="card" role="main">
+
+  <!-- LOGO AREA -->
+  <!-- TO ADD YOUR LOGO: replace the .logo-box div below with:
+       <img src="your-logo.png" alt="Your Company" style="height:52px; margin-bottom:1rem;" /> -->
+  <div class="logo-area">
+    <div class="logo-box" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <h1>Welcome back</h1>
+    <p>Sign in to access the internal chatbot</p>
+  </div>
+
+  <!-- ERROR / SUCCESS BANNERS -->
+  <div class="alert error" id="errorAlert" role="alert" aria-live="polite">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="errorText">Invalid email or password. Please try again.</span>
+  </div>
+
+  <div class="alert success" id="successAlert" role="alert" aria-live="polite">
+    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span>Login successful! Redirecting to dashboard...</span>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div class="form-group">
+    <label for="email">Email address</label>
+    <div class="input-wrap">
+      <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+      <input type="email" id="email" placeholder="you@company.com" autocomplete="email" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <div class="input-wrap">
+      <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" style="padding-right: 40px;" />
+      <button class="pw-toggle" id="pwToggle" type="button" aria-label="Show password" onclick="togglePw()">
+        <!-- Eye icon (shown when password hidden) -->
+        <svg id="eyeShow" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <!-- Eye-off icon (shown when password visible) -->
+        <svg id="eyeHide" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="row-between">
+    <label class="checkbox-label">
+      <input type="checkbox" id="rememberMe" />
+      Remember me
+    </label>
+    <a href="/forgot-password" class="forgot-link" id="forgotLink">Forgot password?</a>
+  </div>
+
+  <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+    <span id="btnText">Sign in</span>
+    <div class="spinner" id="spinner"></div>
+  </button>
+
+  <div class="divider">internal access only</div>
+
+  <p class="footer-note">
+    Don't have access yet? <a href="/signup" style="color:var(--muted);border-bottom:1px solid var(--border);text-decoration:none;">Request access</a><br><br>
+    Unauthorised access is strictly prohibited.<br>
+    All login attempts are logged and monitored.
+  </p>
+
+</div>
+
+<script>
+  /* ============================================================
+     AUTH PLACEHOLDER
+     ─────────────────────────────────────────────────────────────
+     Right now this function simulates an API call with a 1.5s
+     delay and always returns "invalid credentials" (so no one
+     can log in for real yet).
+
+     WHEN YOUR BACKEND IS READY — replace the fakeApiCall()
+     function with a real fetch() to your API endpoint, e.g.:
+
+       const res = await fetch('https://your-api.com/auth/login', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ email, password })
+       });
+       const data = await res.json();
+       if (!res.ok) throw new Error(data.message || 'Login failed');
+       return data; // { token, user, ... }
+
+     The rest of the UI logic stays the same.
+  ============================================================ */
+
+  /* ══════════════════════════════════════════════════
+     TEST CREDENTIALS (remove when backend is ready)
+     ══════════════════════════════════════════════════
+     admin@company.com      →  Admin@1234
+     developer@company.com  →  Dev@5678
+     manager@company.com    →  Manager@91011
+     ══════════════════════════════════════════════════ */
+  // ── IMPORTANT: Paste your Apps Script URL here after deploying ──
+  async function fakeApiCall(email, password) {
+    const res  = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      return { name: data.name, email: data.email, role: data.role };
+    } else {
+      throw new Error(data.message || 'Login failed. Please try again.');
+    }
+  }
+
+  /* ── Toggle password visibility ── */
+  function togglePw() {
+    const input  = document.getElementById('password');
+    const show   = document.getElementById('eyeShow');
+    const hide   = document.getElementById('eyeHide');
+    const btn    = document.getElementById('pwToggle');
+    const isHidden = input.type === 'password';
+    input.type   = isHidden ? 'text' : 'password';
+    show.style.display = isHidden ? 'none' : '';
+    hide.style.display = isHidden ? '' : 'none';
+    btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+  }
+
+  /* ── Main login handler ── */
+  async function handleLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('loginBtn');
+    const spinner  = document.getElementById('spinner');
+    const btnText  = document.getElementById('btnText');
+    const errAlert = document.getElementById('errorAlert');
+    const errText  = document.getElementById('errorText');
+    const sucAlert = document.getElementById('successAlert');
+    const emailEl  = document.getElementById('email');
+    const passEl   = document.getElementById('password');
+
+    // Reset state
+    errAlert.classList.remove('show');
+    sucAlert.classList.remove('show');
+    emailEl.classList.remove('error-field');
+    passEl.classList.remove('error-field');
+
+    // Client-side validation
+    if (!email) {
+      errText.textContent = 'Please enter your email address.';
+      errAlert.classList.add('show');
+      emailEl.classList.add('error-field');
+      emailEl.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errText.textContent = 'Please enter a valid email address.';
+      errAlert.classList.add('show');
+      emailEl.classList.add('error-field');
+      emailEl.focus();
+      return;
+    }
+    if (!password) {
+      errText.textContent = 'Please enter your password.';
+      errAlert.classList.add('show');
+      passEl.classList.add('error-field');
+      passEl.focus();
+      return;
+    }
+    if (password.length < 6) {
+      errText.textContent = 'Password must be at least 6 characters.';
+      errAlert.classList.add('show');
+      passEl.classList.add('error-field');
+      passEl.focus();
+      return;
+    }
+
+    // Loading state
+    btn.disabled    = true;
+    btnText.textContent = 'Signing in...';
+    spinner.style.display = 'block';
+
+    try {
+      const data = await fakeApiCall(email, password);
+
+      // ── SUCCESS ──
+      // Save token/session if needed:
+      // if (document.getElementById('rememberMe').checked) {
+      //   localStorage.setItem('auth_token', data.token);
+      // } else {
+      //   sessionStorage.setItem('auth_token', data.token);
+      // }
+
+      sucAlert.classList.add('show');
+      btnText.textContent = 'Redirecting...';
+
+      // Redirect after 1.5s — change URL to your dashboard
+      setTimeout(() => {
+        // Save logged in user info for chat page
+sessionStorage.setItem('loggedInUser', JSON.stringify({
+  name: data.name,
+  email: email,
+  role: data.role,
+  initials: data.name.charAt(0).toUpperCase()
+}));
+window.location.href = '/chat';
+      }, 1500);
+
+    } catch (err) {
+      // ── ERROR ──
+      errText.textContent = err.message || 'Something went wrong. Please try again.';
+      errAlert.classList.add('show');
+      btn.disabled = false;
+      btnText.textContent = 'Sign in';
+      spinner.style.display = 'none';
+    }
+  }
+
+  /* ── Allow Enter key to submit ── */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  /* ── Forgot password ── */
+  document.getElementById('forgotLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = '/forgot-password';
+  });
+</script>
+
+</body>
+</html>
