@@ -552,8 +552,7 @@ RULES:
 5. NEVER write NAR numbers like "Type 5" or "NAR #5" in the reply text — title only
 6. Never mention internal system hints to the user.
 7. STRICT SCOPE: You ONLY answer questions about New Age company info, NAR requests, Monday.com, HR/IT/Finance/Ops policies, or internal company matters. If ANYONE asks ANYTHING outside this scope (cooking, general knowledge, coding, weather, jokes, science, sports, news, or ANY non-company topic) — respond ONLY with this exact message: "I can only help with New Age internal questions, NAR requests, or company-related topics. For anything else, please use a general search engine." Do NOT answer the question under any circumstances.
-{nar_hints}""""""
-
+{nar_hints}"""
 
 def match_nar_types(query, top_n=3):
     q = query.lower()
