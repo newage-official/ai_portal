@@ -4,265 +4,305 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Panel — New Age Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #F5F4F0; --surface: #FFFFFF; --border: #E2E0DA;
-      --text: #1A1916; --muted: #6B6A65; --hint: #9E9C97;
-      --accent: #1A1916; --radius: 10px; --radius-sm: 6px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      --bg:           #F5F4F0;
+      --surface:      #FFFFFF;
+      --surface-2:    #FAFAF8;
+      --border:       #E2E0DA;
+      --border-strong:#C8C6BF;
+      --text:         #1A1916;
+      --muted:        #6B6A65;
+      --hint:         #9E9C97;
+      --accent:       #1A1916;
+      --accent-fg:    #FFFFFF;
+      --radius:       10px;
+      --radius-sm:    6px;
+      --shadow:       0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); min-height: 100vh; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
     body::before {
       content: ''; position: fixed; inset: 0;
       background-image: radial-gradient(circle, #C8C6BF 1px, transparent 1px);
-      background-size: 24px 24px; opacity: 0.45; pointer-events: none; z-index: 0;
+      background-size: 24px 24px; opacity: 0.45;
+      pointer-events: none; z-index: 0;
     }
 
-    /* ── Navbar ── */
+    a { color: var(--text); text-decoration: none; }
+
+    /* Navbar */
     .navbar {
       position: relative; z-index: 10;
       background: var(--surface); border-bottom: 1px solid var(--border);
       padding: 0 2rem; height: 56px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-brand { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
-    .nav-brand span { color: var(--hint); font-weight: 400; margin-left: 6px; font-size: 0.8125rem; }
-    .nav-right a {
-      font-size: 0.8125rem; color: var(--muted); text-decoration: none;
-      border: 1px solid var(--border); border-radius: var(--radius-sm);
-      padding: 6px 12px; transition: color 0.15s;
+    .nav-brand {
+      font-size: 0.9375rem; font-weight: 600;
+      color: var(--text); display: flex; align-items: center; gap: 6px;
     }
-    .nav-right a:hover { color: var(--text); }
+    .nav-brand span { color: var(--hint); font-weight: 400; font-size: 0.8125rem; }
+    .nav-back {
+      font-size: 0.8125rem; color: var(--muted);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 6px 12px; transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .nav-back:hover { color: var(--text); border-color: var(--border-strong); }
 
-    /* ── Container ── */
-    .container { position: relative; z-index: 1; max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+    /* Container */
+    .container {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 2rem auto;
+      padding: 0 1.5rem 4rem;
+    }
 
-    /* ── Page Header ── */
+    /* Page Header */
     .page-header { margin-bottom: 1.75rem; }
-    .page-header h1 { font-size: 1.25rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
-    .page-header p { font-size: 0.875rem; color: var(--muted); }
+    .page-header h1 { font-size: 1.25rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .page-header p  { font-size: 0.875rem; color: var(--muted); }
 
-    /* ── Main Tabs ── */
+    /* Main Tabs */
     .main-tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; }
     .main-tab {
-      padding: 7px 18px; border-radius: var(--radius-sm); font-size: 0.8125rem;
-      font-weight: 500; cursor: pointer; border: 1px solid var(--border);
-      background: var(--surface); color: var(--muted); transition: all 0.15s;
+      padding: 7px 18px; border-radius: var(--radius-sm);
+      font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); transition: all 0.15s;
       font-family: 'DM Sans', sans-serif;
     }
-    .main-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .main-tab:hover:not(.active) { color: var(--text); }
+    .main-tab.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+    .main-tab:hover:not(.active) { color: var(--text); border-color: var(--border-strong); }
 
-    /* ── Tab Panels ── */
+    /* Tab Panels */
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* ── Card ── */
+    /* Card */
     .card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
     }
     .card-pad { padding: 1.5rem; }
 
-    /* ── Sub-tabs (Users filter) ── */
+    /* Sub-tabs */
     .sub-tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; }
     .sub-tab {
-      padding: 5px 14px; border-radius: var(--radius-sm); font-size: 0.8125rem;
-      font-weight: 500; cursor: pointer; border: 1px solid var(--border);
-      background: var(--surface); color: var(--muted); transition: all 0.15s;
+      padding: 5px 14px; border-radius: var(--radius-sm);
+      font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); transition: all 0.15s;
       font-family: 'DM Sans', sans-serif;
     }
     .sub-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
-    .sub-tab:hover:not(.active) { color: var(--text); }
+    .sub-tab:hover:not(.active) { color: var(--text); border-color: var(--border-strong); }
 
-    /* ── Table ── */
+    /* Table */
     .card-table { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      padding: 12px 16px; text-align: left; font-size: 0.75rem; font-weight: 600;
-      color: var(--hint); text-transform: uppercase; letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border); background: #FAFAF8;
+      padding: 11px 16px; text-align: left;
+      font-size: 0.75rem; font-weight: 600; color: var(--hint);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border); background: var(--surface-2);
     }
-    tbody td { padding: 13px 16px; font-size: 0.875rem; color: var(--text); border-bottom: 1px solid var(--border); }
+    tbody td {
+      padding: 13px 16px; font-size: 0.875rem; color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
     tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: #FAFAF8; }
+    tbody tr:hover td { background: var(--surface-2); }
     .empty { padding: 3rem; text-align: center; color: var(--hint); font-size: 0.875rem; }
 
-    /* ── Badges ── */
+    /* Badges */
     .badge {
       display: inline-flex; align-items: center;
-      padding: 3px 9px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+      padding: 3px 9px; border-radius: 99px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.01em;
     }
     .badge.approved { background: #DCFCE7; color: #166534; }
     .badge.rejected { background: #FEE2E2; color: #991B1B; }
     .badge.pending  { background: #FEF9C3; color: #854D0E; }
-    .badge.admin    { background: #EDE9FE; color: #5B21B6; }
-    .badge.regular  { background: #F1F5F9; color: #475569; }
+    .badge.admin    { background: #1A1916; color: #fff; }
+    .badge.regular  { background: #F1F5F9; color: var(--muted); }
 
-    /* ── Buttons ── */
+    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 12px; border-radius: var(--radius-sm); font-size: 0.8125rem;
-      font-weight: 500; cursor: pointer; border: 1px solid; font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.15s; white-space: nowrap; text-decoration: none;
+      padding: 5px 12px; border-radius: var(--radius-sm);
+      font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+      border: 1px solid; font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s; white-space: nowrap;
     }
-    .btn:hover { opacity: 0.8; }
+    .btn:hover { opacity: 0.75; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-save    { background: #DCFCE7; color: #166534; border-color: #BBF7D0; }
     .btn-danger  { background: #FEE2E2; color: #991B1B; border-color: #FECACA; }
-    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); height: 40px; padding: 0 18px; font-size: 0.875rem; font-weight: 600; }
-    .btn-outline { background: var(--surface); color: var(--text); border-color: var(--border); height: 40px; padding: 0 18px; font-size: 0.875rem; font-weight: 600; }
+    .btn-primary {
+      background: var(--accent); color: var(--accent-fg); border-color: var(--accent);
+      height: 40px; padding: 0 18px; font-size: 0.875rem; font-weight: 600;
+    }
+    .btn-outline {
+      background: var(--surface); color: var(--text); border-color: var(--border);
+      height: 40px; padding: 0 18px; font-size: 0.875rem; font-weight: 600;
+    }
+    .btn-outline:hover { border-color: var(--border-strong); }
 
-    /* ── Form Elements ── */
+    /* Form Elements */
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-label { font-size: 0.8125rem; font-weight: 500; color: var(--text); }
     .form-hint  { font-size: 0.75rem; color: var(--hint); }
+    .req { color: #991B1B; margin-left: 2px; }
+    .opt { color: var(--hint); font-weight: 400; margin-left: 3px; font-size: 0.75rem; }
+
     .form-input {
       width: 100%; height: 40px; padding: 0 12px;
       font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       outline: none; color: var(--text); background: var(--surface);
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .form-input:focus { border-color: var(--accent); }
+    .form-input:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(26,25,22,0.07);
+    }
+    .form-input::placeholder { color: var(--hint); }
+
     .form-textarea {
-      width: 100%; padding: 10px 12px;
+      width: 100%; padding: 10px 12px; min-height: 110px;
       font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       outline: none; color: var(--text); background: var(--surface);
-      resize: vertical; transition: border-color 0.15s;
+      resize: vertical; transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .form-textarea:focus { border-color: var(--accent); }
+    .form-textarea:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(26,25,22,0.07);
+    }
+    .form-textarea::placeholder { color: var(--hint); }
+
     .form-select {
       height: 32px; padding: 0 8px;
       font-family: 'DM Sans', sans-serif; font-size: 0.8125rem;
       border: 1px solid var(--border); border-radius: var(--radius-sm);
-      cursor: pointer; background: #fff; color: var(--text);
-      outline: none;
+      cursor: pointer; background: var(--surface); color: var(--text); outline: none;
     }
-    .form-file {
-      font-family: 'DM Sans', sans-serif; font-size: 0.8125rem; color: var(--muted);
-    }
+    .form-file { font-family: 'DM Sans', sans-serif; font-size: 0.8125rem; color: var(--muted); }
 
-    /* ── Row layouts ── */
-    .flex-row   { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
-    .flex-grow  { flex: 1; min-width: 180px; }
-    .form-grid  { display: flex; flex-direction: column; gap: 1rem; }
-    .divider    { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+    /* Layout helpers */
+    .flex-row  { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    .flex-grow { flex: 1; min-width: 180px; }
+    .form-grid { display: flex; flex-direction: column; gap: 1rem; }
+    .divider   { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+    .mb-5      { margin-bottom: 1.25rem; }
 
-    /* ── Section label ── */
+    /* Section label */
     .section-label {
       font-size: 0.8125rem; font-weight: 600; color: var(--text);
       display: flex; align-items: center; gap: 6px; margin-bottom: 0.75rem;
     }
 
-    /* ── Whitelist email chips ── */
+    /* Whitelist search */
     .email-count {
       display: inline-flex; align-items: center;
-      background: #F1F5F9; color: #475569;
+      background: #F1F5F9; color: var(--muted);
       padding: 2px 8px; border-radius: 99px;
       font-size: 0.75rem; font-weight: 600;
+    }
+    .wl-search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .wl-search-wrap svg {
+      position: absolute; left: 10px; top: 50%;
+      transform: translateY(-50%); pointer-events: none;
     }
     .wl-search {
       width: 100%; height: 36px; padding: 0 12px 0 34px;
       font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       outline: none; color: var(--text); background: var(--surface);
+      transition: border-color 0.15s;
     }
-    .wl-search:focus { border-color: var(--accent); }
-    .wl-search-wrap { position: relative; flex: 1; min-width: 180px; }
-    .wl-search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+    .wl-search:focus { border-color: var(--border-strong); }
+    .wl-search::placeholder { color: var(--hint); }
 
-    /* ── Toast ── */
+    /* Toast */
     .toast {
       position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
-      background: var(--accent); color: #fff;
+      background: var(--accent); color: var(--accent-fg);
       padding: 12px 20px; border-radius: var(--radius-sm);
       font-size: 0.875rem; font-weight: 500;
-      animation: slideIn 0.2s ease; display: none; max-width: 320px;
+      display: none; max-width: 320px;
+      animation: toastIn 0.2s ease;
     }
     .toast.success { background: #166534; }
     .toast.error   { background: #991B1B; }
-    @keyframes slideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-    /* ── Loading spinner ── */
+    /* Spinner */
     .spinner {
       display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
-      border-radius: 50%; animation: spin 0.6s linear infinite;
+      border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.65s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "x13hxsbvnw");
+  <script>
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","x13hxsbvnw");
   </script>
 </head>
 <body>
 
-<!-- ── Navbar ── -->
 <nav class="navbar">
   <div class="nav-brand">New Age Portal <span>Admin Panel</span></div>
-  <div class="nav-right"><a href="/chat">← Back to Chat</a></div>
+  <div><a href="/chat" class="nav-back">← Back to Chat</a></div>
 </nav>
 
 <div class="container">
 
-  <!-- ── Page Header ── -->
   <div class="page-header">
     <h1>Admin Panel</h1>
     <p>Manage users, email access, and the AI knowledge base</p>
   </div>
 
-  <!-- ── Main Tabs ── -->
   <div class="main-tabs">
     <button class="main-tab active" onclick="switchTab('users', this)">Users</button>
     <button class="main-tab" onclick="switchTab('validate', this)">Validate Email</button>
     <button class="main-tab" onclick="switchTab('knowledge', this)">Knowledge Base</button>
   </div>
 
-  <!-- ════════════════════════════════════
-       TAB 1 — USERS
-  ════════════════════════════════════ -->
+  <!-- TAB 1 — USERS -->
   <div class="tab-panel active" id="tab-users">
     <div class="sub-tabs">
       <button class="sub-tab active" onclick="filterUsers('All', this)">All</button>
       <button class="sub-tab" onclick="filterUsers('Approved', this)">Approved</button>
       <button class="sub-tab" onclick="filterUsers('Rejected', this)">Rejected</button>
     </div>
-
     <div class="card card-table">
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Joined</th>
-            <th>Status</th>
-            <th>Change Role</th>
-            <th>Actions</th>
+            <th>Name</th><th>Email</th><th>Role</th><th>Joined</th>
+            <th>Status</th><th>Change Role</th><th>Actions</th>
           </tr>
         </thead>
         <tbody id="usersTable">
-          <tr><td colspan="7" class="empty">Loading...</td></tr>
+          <tr><td colspan="7" class="empty">Loading…</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ════════════════════════════════════
-       TAB 2 — VALIDATE EMAIL
-  ════════════════════════════════════ -->
+  <!-- TAB 2 — VALIDATE EMAIL -->
   <div class="tab-panel" id="tab-validate">
-
-    <!-- Add email row -->
-    <div class="card card-pad" style="margin-bottom: 1.25rem;">
+    <div class="card card-pad mb-5">
       <div class="section-label">Add email access</div>
       <div class="flex-row">
         <div class="flex-grow form-group">
@@ -270,9 +310,7 @@
         </div>
         <button class="btn btn-primary" onclick="addWhitelist()">+ Add Email</button>
       </div>
-
       <hr class="divider">
-
       <div class="section-label">📄 Bulk upload via CSV</div>
       <p class="form-hint" style="margin-bottom:10px;">One email per row. Any column — the system picks valid emails automatically.</p>
       <div class="flex-row">
@@ -281,61 +319,50 @@
       </div>
     </div>
 
-    <!-- Email list -->
     <div class="card card-pad">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:8px;">
-        <div style="display:flex; align-items:center; gap:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
           <span class="section-label" style="margin-bottom:0;">Validated emails</span>
           <span class="email-count" id="wlCount">0</span>
         </div>
         <div class="wl-search-wrap" style="max-width:260px;">
-          <svg width="14" height="14" fill="none" stroke="#9E9C97" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" id="wlSearch" class="wl-search" placeholder="Search emails..." oninput="renderWhitelist()" />
+          <svg width="14" height="14" fill="none" stroke="#9E9C97" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input type="text" id="wlSearch" class="wl-search" placeholder="Search emails…" oninput="renderWhitelist()" />
         </div>
       </div>
       <div class="card-table">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Email Address</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Email Address</th><th>Actions</th></tr></thead>
           <tbody id="wlTable">
-            <tr><td colspan="3" class="empty">Loading...</td></tr>
+            <tr><td colspan="3" class="empty">Loading…</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- ════════════════════════════════════
-       TAB 3 — KNOWLEDGE BASE
-  ════════════════════════════════════ -->
+  <!-- TAB 3 — KNOWLEDGE BASE -->
   <div class="tab-panel" id="tab-knowledge">
-
-    <!-- Add entry form -->
-    <div class="card card-pad" style="margin-bottom: 1.25rem;">
+    <div class="card card-pad mb-5">
       <div class="section-label">Add knowledge entry</div>
       <div class="form-grid">
         <div class="form-group">
-          <label class="form-label">Title <span style="color:#991B1B;">*</span></label>
+          <label class="form-label">Title <span class="req">*</span></label>
           <input type="text" id="kTitle" class="form-input" placeholder="e.g. Leave Policy, Product Info" />
         </div>
         <div class="form-group">
-          <label class="form-label">URL <span style="color:var(--hint); font-weight:400;">(optional — auto-fetches content)</span></label>
+          <label class="form-label">URL <span class="opt">(optional — auto-fetches content)</span></label>
           <input type="url" id="kUrl" class="form-input" placeholder="https://notion.so/your-page or any public URL" />
         </div>
         <div class="form-group">
-          <label class="form-label">Content <span style="color:var(--hint); font-weight:400;">(paste text if no URL)</span></label>
-          <textarea id="kContent" class="form-textarea" rows="5" placeholder="Paste the knowledge content here..."></textarea>
+          <label class="form-label">Content <span class="opt">(paste text if no URL)</span></label>
+          <textarea id="kContent" class="form-textarea" rows="5" placeholder="Paste the knowledge content here…"></textarea>
         </div>
         <button class="btn btn-primary" style="align-self:flex-start;" onclick="addKnowledge()">+ Add to Knowledge Base</button>
       </div>
-
       <hr class="divider">
-
       <div class="section-label">📄 Or upload a PDF</div>
       <div class="flex-row">
         <div class="flex-grow form-group">
@@ -346,33 +373,23 @@
       </div>
     </div>
 
-    <!-- Knowledge list -->
     <div class="card card-table">
       <table>
         <thead>
-          <tr>
-            <th>Title</th>
-            <th>Preview</th>
-            <th>Source</th>
-            <th>Added</th>
-            <th>Actions</th>
-          </tr>
+          <tr><th>Title</th><th>Preview</th><th>Source</th><th>Added</th><th>Actions</th></tr>
         </thead>
         <tbody id="kTableBody">
-          <tr><td colspan="5" class="empty">Loading...</td></tr>
+          <tr><td colspan="5" class="empty">Loading…</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // ════════════════════════════════════
-  // TAB SWITCHING
-  // ════════════════════════════════════
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
@@ -380,9 +397,6 @@
     btn.classList.add('active');
   }
 
-  // ════════════════════════════════════
-  // TOAST
-  // ════════════════════════════════════
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -392,16 +406,12 @@
     t._timer = setTimeout(() => t.style.display = 'none', 2800);
   }
 
-  // ════════════════════════════════════
-  // USERS
-  // ════════════════════════════════════
-  let allUsers = [];
-  let userFilter = 'All';
+  let allUsers = [], userFilter = 'All';
 
   async function loadUsers() {
-    const res  = await fetch('/api/admin/users');
+    const res = await fetch('/api/admin/users');
     const data = await res.json();
-    allUsers   = data.users || [];
+    allUsers = data.users || [];
     renderUsers();
   }
 
@@ -414,26 +424,23 @@
 
   function renderUsers() {
     const tbody = document.getElementById('usersTable');
-    const list  = userFilter === 'All' ? allUsers : allUsers.filter(u => u.status === userFilter);
-
-    if (list.length === 0) {
+    const list = userFilter === 'All' ? allUsers : allUsers.filter(u => u.status === userFilter);
+    if (!list.length) {
       tbody.innerHTML = `<tr><td colspan="7" class="empty">No ${userFilter.toLowerCase()} users found.</td></tr>`;
       return;
     }
-
     tbody.innerHTML = list.map(u => {
       const sid = u.email.replace(/[^a-z0-9]/gi, '_');
-      return `
-      <tr>
+      return `<tr>
         <td><strong>${escHtml(u.name)}</strong></td>
         <td style="color:var(--muted);">${escHtml(u.email)}</td>
         <td><span class="badge ${u.role === 'Admin' ? 'admin' : 'regular'}">${escHtml(u.role)}</span></td>
-        <td style="color:var(--hint); font-size:0.8125rem;">${escHtml(u.created_at)}</td>
+        <td style="color:var(--hint);font-size:0.8125rem;">${escHtml(u.created_at)}</td>
         <td><span class="badge ${u.status.toLowerCase()}">${escHtml(u.status)}</span></td>
         <td>
           <select id="role_${sid}" class="form-select">
-            <option value="Regular" ${u.role === 'Regular' ? 'selected' : ''}>Regular</option>
-            <option value="Admin"   ${u.role === 'Admin'   ? 'selected' : ''}>Admin</option>
+            <option value="Regular" ${u.role==='Regular'?'selected':''}>Regular</option>
+            <option value="Admin"   ${u.role==='Admin'?'selected':''}>Admin</option>
           </select>
         </td>
         <td style="white-space:nowrap;">
@@ -447,11 +454,11 @@
   }
 
   async function saveRole(email) {
-    const sid  = email.replace(/[^a-z0-9]/gi, '_');
+    const sid = email.replace(/[^a-z0-9]/gi, '_');
     const role = document.getElementById('role_' + sid).value;
-    const res  = await fetch('/api/admin/update-role', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, role })
+    const res = await fetch('/api/admin/update-role', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email, role})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
@@ -459,67 +466,58 @@
   }
 
   async function updateUser(email, action) {
-    const res  = await fetch('/api/admin/approve', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, action })
+    const res = await fetch('/api/admin/approve', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email, action})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
     if (data.success) loadUsers();
   }
 
-  // ════════════════════════════════════
-  // VALIDATE EMAIL (WHITELIST)
-  // ════════════════════════════════════
   let allEmails = [];
 
   async function loadWhitelist() {
-    const res  = await fetch('/api/admin/whitelist');
+    const res = await fetch('/api/admin/whitelist');
     const data = await res.json();
-    allEmails  = data.emails || [];
+    allEmails = data.emails || [];
     renderWhitelist();
   }
 
   function renderWhitelist() {
-    const q     = (document.getElementById('wlSearch').value || '').toLowerCase();
-    const list  = allEmails.filter(e => e.includes(q));
+    const q = (document.getElementById('wlSearch').value || '').toLowerCase();
+    const list = allEmails.filter(e => e.includes(q));
     const tbody = document.getElementById('wlTable');
     document.getElementById('wlCount').textContent = allEmails.length;
-
-    if (list.length === 0) {
+    if (!list.length) {
       tbody.innerHTML = `<tr><td colspan="3" class="empty">${q ? 'No emails match your search.' : 'No emails validated yet.'}</td></tr>`;
       return;
     }
-
     tbody.innerHTML = list.map((e, i) => `
       <tr>
-        <td style="color:var(--hint); font-size:0.8125rem; width:48px;">${i + 1}</td>
+        <td style="color:var(--hint);font-size:0.8125rem;width:48px;">${i+1}</td>
         <td>${escHtml(e)}</td>
         <td><button class="btn btn-danger" onclick="removeWhitelist('${escHtml(e)}')">✕ Remove</button></td>
-      </tr>
-    `).join('');
+      </tr>`).join('');
   }
 
   async function addWhitelist() {
     const email = document.getElementById('wlEmail').value.trim().toLowerCase();
-    if (!email) return showToast('Please enter an email address', 'error');
-    const res  = await fetch('/api/admin/whitelist/add', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+    if (!email) return showToast('Please enter an email address.', 'error');
+    const res = await fetch('/api/admin/whitelist/add', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
-    if (data.success) {
-      document.getElementById('wlEmail').value = '';
-      loadWhitelist();
-    }
+    if (data.success) { document.getElementById('wlEmail').value = ''; loadWhitelist(); }
   }
 
   async function removeWhitelist(email) {
     if (!confirm(`Remove ${email} from validated emails?`)) return;
-    const res  = await fetch('/api/admin/whitelist/remove', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+    const res = await fetch('/api/admin/whitelist/remove', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
@@ -528,43 +526,34 @@
 
   async function uploadWlCsv() {
     const file = document.getElementById('wlCsvFile').files[0];
-    if (!file) return showToast('Please select a CSV file', 'error');
-    showToast('Uploading CSV...');
+    if (!file) return showToast('Please select a CSV file.', 'error');
+    showToast('Uploading CSV…');
     const formData = new FormData();
     formData.append('csv', file);
-    const res  = await fetch('/api/admin/whitelist/upload-csv', { method: 'POST', body: formData });
+    const res = await fetch('/api/admin/whitelist/upload-csv', {method:'POST', body:formData});
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
-    if (data.success) {
-      document.getElementById('wlCsvFile').value = '';
-      loadWhitelist();
-    }
+    if (data.success) { document.getElementById('wlCsvFile').value = ''; loadWhitelist(); }
   }
 
-  // ════════════════════════════════════
-  // KNOWLEDGE BASE
-  // ════════════════════════════════════
   async function loadKnowledge() {
-    const res   = await fetch('/api/knowledge');
-    const data  = await res.json();
+    const res = await fetch('/api/knowledge');
+    const data = await res.json();
     const tbody = document.getElementById('kTableBody');
-    const list  = data.entries || [];
-
-    if (list.length === 0) {
+    const list = data.entries || [];
+    if (!list.length) {
       tbody.innerHTML = '<tr><td colspan="5" class="empty">No knowledge entries yet. Add one above.</td></tr>';
       return;
     }
-
     tbody.innerHTML = list.map(e => {
       const source = e.url
         ? (e.url.startsWith('PDF:')
             ? `<span style="font-size:0.75rem;background:#FEF9C3;color:#854D0E;padding:2px 7px;border-radius:99px;font-weight:600;">PDF</span>`
-            : `<a href="${escHtml(e.url)}" target="_blank" style="font-size:0.8125rem;color:var(--muted);text-decoration:none;max-width:160px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(e.url)}">↗ Link</a>`)
-        : '<span style="color:var(--hint);font-size:0.8125rem;">Manual</span>';
-      return `
-      <tr>
+            : `<a href="${escHtml(e.url)}" target="_blank" style="font-size:0.8125rem;color:var(--muted);max-width:160px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(e.url)}">↗ Link</a>`)
+        : `<span style="color:var(--hint);font-size:0.8125rem;">Manual</span>`;
+      return `<tr>
         <td style="font-weight:600;">${escHtml(e.title)}</td>
-        <td style="color:var(--muted);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.8125rem;">${escHtml(e.content.slice(0, 90))}…</td>
+        <td style="color:var(--muted);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.8125rem;">${escHtml(e.content.slice(0,90))}…</td>
         <td>${source}</td>
         <td style="color:var(--hint);font-size:0.8125rem;white-space:nowrap;">${escHtml(e.created_at)}</td>
         <td style="white-space:nowrap;">
@@ -576,23 +565,21 @@
   }
 
   async function addKnowledge() {
-    const title   = document.getElementById('kTitle').value.trim();
-    const url     = document.getElementById('kUrl').value.trim();
+    const title = document.getElementById('kTitle').value.trim();
+    const url = document.getElementById('kUrl').value.trim();
     const content = document.getElementById('kContent').value.trim();
-
-    if (!title)          return showToast('Title is required', 'error');
-    if (!url && !content) return showToast('Enter a URL or paste content', 'error');
-
+    if (!title)           return showToast('Title is required.', 'error');
+    if (!url && !content) return showToast('Enter a URL or paste content.', 'error');
     showToast('Adding entry…');
-    const res  = await fetch('/api/knowledge/add', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, url, content })
+    const res = await fetch('/api/knowledge/add', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({title, url, content})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
     if (data.success) {
-      document.getElementById('kTitle').value   = '';
-      document.getElementById('kUrl').value     = '';
+      document.getElementById('kTitle').value = '';
+      document.getElementById('kUrl').value = '';
       document.getElementById('kContent').value = '';
       loadKnowledge();
     }
@@ -600,28 +587,28 @@
 
   async function uploadPdf() {
     const title = document.getElementById('pdfTitle').value.trim();
-    const file  = document.getElementById('pdfFile').files[0];
-    if (!title) return showToast('Please enter a PDF title', 'error');
-    if (!file)  return showToast('Please select a PDF file', 'error');
+    const file = document.getElementById('pdfFile').files[0];
+    if (!title) return showToast('Please enter a PDF title.', 'error');
+    if (!file)  return showToast('Please select a PDF file.', 'error');
     showToast('Uploading PDF…');
     const formData = new FormData();
     formData.append('pdf', file);
     formData.append('title', title);
-    const res  = await fetch('/api/knowledge/upload-pdf', { method: 'POST', body: formData });
+    const res = await fetch('/api/knowledge/upload-pdf', {method:'POST', body:formData});
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
     if (data.success) {
       document.getElementById('pdfTitle').value = '';
-      document.getElementById('pdfFile').value  = '';
+      document.getElementById('pdfFile').value = '';
       loadKnowledge();
     }
   }
 
   async function deleteKnowledge(id) {
     if (!confirm('Delete this knowledge entry?')) return;
-    const res  = await fetch('/api/knowledge/delete', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
+    const res = await fetch('/api/knowledge/delete', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
@@ -629,17 +616,14 @@
   }
 
   function editKnowledge(id) {
-    const rows = document.querySelectorAll('#kTableBody tr');
-    rows.forEach(row => {
+    document.querySelectorAll('#kTableBody tr').forEach(row => {
       const btn = row.querySelector('[onclick*="editKnowledge"]');
       if (!btn) return;
       const onclickId = btn.getAttribute('onclick').match(/'([^']+)'/)?.[1];
       if (onclickId !== id) return;
-
       const cells = row.querySelectorAll('td');
-      const title   = cells[0].textContent.trim();
+      const title = cells[0].textContent.trim();
       const preview = cells[1].textContent.trim();
-
       cells[0].innerHTML = `<input class="form-input" id="edit_title_${id}" value="${escAttr(title)}" style="max-width:200px;" />`;
       cells[1].innerHTML = `<textarea class="form-textarea" id="edit_content_${id}" rows="3" style="min-width:200px;">${escHtml(preview)}</textarea>`;
       cells[4].innerHTML = `
@@ -649,31 +633,21 @@
   }
 
   async function saveKnowledge(id) {
-    const title   = document.getElementById('edit_title_' + id)?.value.trim();
+    const title   = document.getElementById('edit_title_'   + id)?.value.trim();
     const content = document.getElementById('edit_content_' + id)?.value.trim();
-    if (!title) return showToast('Title cannot be empty', 'error');
-    const res  = await fetch('/api/knowledge/edit', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, title, content })
+    if (!title) return showToast('Title cannot be empty.', 'error');
+    const res = await fetch('/api/knowledge/edit', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id, title, content})
     });
     const data = await res.json();
     showToast(data.message, data.success ? 'success' : 'error');
     if (data.success) loadKnowledge();
   }
 
-  // ════════════════════════════════════
-  // UTILS
-  // ════════════════════════════════════
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function escAttr(s) {
-    return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escAttr(s) { return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-  // ════════════════════════════════════
-  // INIT
-  // ════════════════════════════════════
   loadUsers();
   loadWhitelist();
   loadKnowledge();
